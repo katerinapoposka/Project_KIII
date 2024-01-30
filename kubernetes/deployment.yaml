@@ -1,0 +1,19 @@
+# deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: deployment
+  namespace: kiii
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: studentsapp
+  template:
+    metadata:
+      labels:
+        app: studentsapp
+    spec:
+      containers:
+      - name: kiii-project
+        image: katerinapoposka/sample-demo-project:latest

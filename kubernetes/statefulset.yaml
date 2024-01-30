@@ -1,0 +1,46 @@
+# statefulset.yaml
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: statefulset
+  namespace: kiii
+spec:
+  serviceName: db
+  replicas: 1
+  selector:
+    matchLabels:
+      app: studentsapp
+  template:
+    metadata:
+      labels:
+        app: studentsapp
+    spec:
+      containers:
+      - name: kiii-project
+        image: katerinapoposka/sample-demo-project:latest
+        env:
+        - name: POSTGRES_DB
+          valueFrom:
+            secretKeyRef:
+              name: secret
+              key: POSTGRES_DB
+        - name: POSTGRES_USER
+          valueFrom:
+            secretKeyRef:
+              name: secret
+              key: POSTGRES_USER
+        - name: POSTGRES_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: secret
+              key: POSTGRES_PASSWORD
+  volumeClaimTemplates:
+  - metadata:
+      name: data
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      storageClassName: local-path
+      resources:
+        requests:
+          storage: 1Gi
+
