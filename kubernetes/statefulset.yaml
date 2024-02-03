@@ -16,8 +16,10 @@ spec:
         app: studentsapp
     spec:
       containers:
-      - name: kiii-project
-        image: katerinapoposka/sample-demo-project:latest
+      - name: students
+        image: katerinapoposka/appstudents:latest
+        ports:
+          - containerPort: 5432
         env:
         - name: POSTGRES_DB
           valueFrom:
