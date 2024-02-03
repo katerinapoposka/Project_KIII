@@ -1,11 +1,10 @@
-# deployment.yaml
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: deployment
   namespace: kiii
 spec:
-  replicas: 3
+  replicas: 5
   selector:
     matchLabels:
       app: studentsapp
@@ -15,5 +14,33 @@ spec:
         app: studentsapp
     spec:
       containers:
-      - name: kiii-project
-        image: katerinapoposka/sample-demo-project:latest
+      - image: katerinapoposka/sample-demo-project:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8080
+        env:
+        - name: POSTGRES_URL
+          value: "jdbc:postgresql://localhost:5432/students"
+        - name: POSTGRES_DATABASE
+          value: "students"
+        - name: POSTGRES_USER
+          value: "postgres"
+        - name: POSTGRES_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: secret
+              key: POSTGRES_PASSWORD
+        - name: SPRING_DATASOURCE_URL
+          value: "jdbc:postgresql://localhost:5432/students"
+        - name: SPRING_DATASOURCE_USERNAME
+          value: "postgres"
+        - name: SPRING_DATASOURCE_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: secret
+              key: POSTGRES_PASSWORD
+        - name: SPRING_JPA_HIBERNATE_DDL_AUTO
+          value: "update"
+        - name: SPRING_JPA_SHOW_SQL
+          value: "true"
+
