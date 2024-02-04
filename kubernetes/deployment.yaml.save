@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: deployment
+  namespace: kiii
+spec:
+  replicas: 5
+  selector:
+    matchLabels:
+      app: studentsapp
+  template:
+    metadata:
+      labels:
+        app: studentsapp
+    spec:
+      containers:
+env:
+  - name: POSTGRES_URL
+    value: "jdbc:postgresql://postgres-service:5432/students"
+  - name: POSTGRES_DATABASE
+    value: "students"
+  - name: POSTGRES_USER
+    value: "postgres"
+  - name: POSTGRES_PASSWORD
+    valueFrom:
+      secretKeyRef:
+        name: secret
+        key: POSTGRES_PASSWORD
